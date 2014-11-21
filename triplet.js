@@ -4,16 +4,14 @@
 
 module.exports = Triplet;
 
+// P = PREVIOUS COLOR, S = SAME, N = NEXT
 function Triplet(p, s, n) {
 	this.p = p;
 	this.s = s;
 	this.n = n;
 }
 
-// PARTIAL ORDERING ON SET OF ALL TRIPLETS
-Triplet.prototype.lessThan = function (other) {
-	return this.lessThanOrEqual(other) && !this.equal(other)
-}
+// PARTIAL ORDERING AND EQUALITY ON SET OF ALL TRIPLETS
 
 Triplet.prototype.equal = function (other) {
 	return this.p == other.p && this.n == other.n
@@ -23,7 +21,11 @@ Triplet.prototype.lessThanOrEqual = function (other) {
 	return this.p <= other.p && this.n >= other.n
 }
 
-// "S" MUST BE EVEN AND NOT EQUAL TO DEGREE
+Triplet.prototype.lessThan = function (other) {
+	return this.lessThanOrEqual(other) && !this.equal(other)
+}
+
+// "S" NUMBER MUST BE EVEN AND NOT EQUAL TO DEGREE (ELSE WE GET IMPOSSIBLE OR TRIVIAL COLORING)
 Triplet.prototype.isValid = function () {
 	return 
 		this.p + this.s + this.n == Triplet.degree &&
@@ -53,18 +55,21 @@ Triplet.allTriplets = function () {
 	return result;
 }
 
+// TRIPLETS START WITH 0
 Triplet.startTriplets = function () {
 	return Triplet
 		.allTriplets()
 		.filter(function (t) { return t.p == 0; });
 };
 
+// TRIPLETS END WITH 0
 Triplet.endTriplets = function () {
 	return Triplet
 		.allTriplets()
 		.filter(function (t) { return t.n == 0; });
 }
 
+// TRIPLET THAT <= THAN EVERY OTHER
 Triplet.minTriplet = function () {
 	return new Triplet(0, 0, Triplet.degree);
 }
